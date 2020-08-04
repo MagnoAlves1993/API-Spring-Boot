@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+    mysql-b2w:
+        build: 
+            context: database-service
+            dockerfile: Dockerfile
+        image: mysql
+        environment: 
+            - MYSQL_ROOT_PASSWORD=b2w123
+            - MYSQL_DATABASE=db_example
+            - MYSQL_USER=magno
+            - MYSQL_PASSWORD=b2w123
+        ports:
+            - "3306:3306"
+        hostname: mysql-b2w
+        volumes:
+            - db-volume:/var/lib/mysql
+        restart: always
+    api-b2w:
+        build:
+            context: backend-service/
+            dockerfile: Dockerfile
+        image: api-b2w-web
+        depends_on: 
+            - mysql-b2w
+        ports:
+            - "8080:8080"
+        environment: 
+            - DB_HOST=YOUR_IP_NAMBER:3306 #example 192.167.0.101
+            - DB_USER=magno
+            - DB_NAME=db_example
+            - DB_PASSWORD=b2w123
+volumes:
+    db-volume:
